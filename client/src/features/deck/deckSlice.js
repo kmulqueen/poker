@@ -5,14 +5,19 @@ const deckCopy = JSON.parse(JSON.stringify(originalDeck));
 export const deckSlice = createSlice({
   name: "deck",
   initialState: {
-    deck: [...deckCopy],
+    deck: { ...deckCopy },
+    availableCards: Object.keys(deckCopy).length,
   },
   reducers: {
     resetDeck: (state) => {
-      state.deck = deckCopy;
+      state.deck = { ...deckCopy };
+      state.availableCards = Object.keys(deckCopy).length;
     },
     updateDeck: (state, action) => {
-      state.deck = action.payload;
+      action.payload.forEach((card) => {
+        state.deck[card.id] = card;
+        state.availableCards--;
+      });
     },
   },
 });

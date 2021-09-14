@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { updateBoard, updateStreet } from "./boardSlice";
 import { updateDeck, resetDeck } from "../deck/deckSlice";
+import { randomNumbers } from "../../helper";
 
 const Board = () => {
   const board = useSelector((state) => state.board.board);
@@ -8,41 +9,72 @@ const Board = () => {
   const deck = useSelector((state) => state.deck.deck);
   const dispatch = useDispatch();
 
-  function getFlop() {
-    let updatedDeck = [...deck];
-    let rand1 = Math.floor(Math.random() * updatedDeck.length);
-    rand1 = updatedDeck.splice(rand1, 1)[0];
-    let rand2 = Math.floor(Math.random() * updatedDeck.length);
-    rand2 = updatedDeck.splice(rand2, 1)[0];
-    let rand3 = Math.floor(Math.random() * updatedDeck.length);
-    rand3 = updatedDeck.splice(rand3, 1)[0];
+  function getDeckSize() {
+    // Initialize deck size
+    let deckSize = Object.keys(deck).length;
 
-    const flop = [rand1, rand2, rand3];
+    // Adjust deck size based on how many cards are marked as already dealt
+    for (const property in deck) {
+      if (deck[property].isDealt) {
+        deckSize--;
+      }
+    }
+
+    return deckSize;
+  }
+
+  //TODO - Refactor to not reuse code ========================
+  function getFlop() {
+    const deckSize = getDeckSize();
+
+    const cardIDs = randomNumbers(deckSize, 3);
+
+    const flop = cardIDs.map((id) => {
+      return {
+        ...deck[id],
+        isDealt: true,
+      };
+    });
 
     dispatch(updateBoard(flop));
-    dispatch(updateDeck(updatedDeck));
+    dispatch(updateDeck(flop));
     dispatch(updateStreet("flop"));
   }
 
   function getTurn() {
-    let updatedDeck = [...deck];
-    let rand = Math.floor(Math.random() * updatedDeck.length);
-    rand = updatedDeck.splice(rand, 1)[0];
+    const deckSize = getDeckSize();
 
-    dispatch(updateBoard([...board, rand]));
-    dispatch(updateDeck(updatedDeck));
+    const cardIDs = randomNumbers(deckSize, 1);
+
+    const turn = cardIDs.map((id) => {
+      return {
+        ...deck[id],
+        isDealt: true,
+      };
+    });
+
+    dispatch(updateBoard([...board, turn[0]]));
+    dispatch(updateDeck(turn));
     dispatch(updateStreet("turn"));
   }
 
   function getRiver() {
-    let updatedDeck = [...deck];
-    let rand = Math.floor(Math.random() * updatedDeck.length);
-    rand = updatedDeck.splice(rand, 1)[0];
+    const deckSize = getDeckSize();
 
-    dispatch(updateBoard([...board, rand]));
-    dispatch(updateDeck(updatedDeck));
+    const cardIDs = randomNumbers(deckSize, 1);
+
+    const river = cardIDs.map((id) => {
+      return {
+        ...deck[id],
+        isDealt: true,
+      };
+    });
+
+    dispatch(updateBoard([...board, river[0]]));
+    dispatch(updateDeck(river));
     dispatch(updateStreet("river"));
   }
+  //TODO - End Todo ===========================================
 
   function handleNewStreet() {
     if (street === "") {
