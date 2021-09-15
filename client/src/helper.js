@@ -7,3 +7,25 @@ export const randomNumbers = (limit, numOfNumbers) => {
 
   return Array.from(nums);
 };
+
+// randomCards returns an array with a determined number of random cards which have not been dealt.
+export const randomCards = (deck, numOfCards) => {
+  const deckSize = Object.keys(deck).length;
+  const cardIDs = new Set();
+
+  while (cardIDs.size < numOfCards) {
+    let cardID = Math.floor(Math.random() * deckSize);
+    if (cardID !== 0) {
+      if (!deck[cardID].isDealt) {
+        cardIDs.add(cardID);
+      }
+    }
+  }
+
+  const cards = [];
+  cardIDs.forEach((value) => {
+    cards.push(deck[value]);
+  });
+
+  return cards;
+};

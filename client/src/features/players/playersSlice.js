@@ -25,11 +25,12 @@ export const playersSlice = createSlice({
       );
     },
     dealHand: (state, action) => {
-      console.log(action.payload);
-      //   state.player.hand = action.payload.hand;
-      state.players.filter(
-        (player) => player.id === action.payload.id
-      )[0].hand = action.payload.hand;
+      state.players.forEach((player, idx) => {
+        state.players[idx].hand = action.payload[player.id];
+        if (player.id === state.player.id) {
+          state.player.hand = action.payload[player.id];
+        }
+      });
     },
   },
 });

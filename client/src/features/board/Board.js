@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { updateBoard, updateStreet } from "./boardSlice";
 import { updateDeck, resetDeck } from "../deck/deckSlice";
-import { randomNumbers } from "../../helper";
+import { randomCards } from "../../helper";
 
 const Board = () => {
   const board = useSelector((state) => state.board.board);
@@ -9,29 +9,10 @@ const Board = () => {
   const deck = useSelector((state) => state.deck.deck);
   const dispatch = useDispatch();
 
-  function getDeckSize() {
-    // Initialize deck size
-    let deckSize = Object.keys(deck).length;
-
-    // Adjust deck size based on how many cards are marked as already dealt
-    for (const property in deck) {
-      if (deck[property].isDealt) {
-        deckSize--;
-      }
-    }
-
-    return deckSize;
-  }
-
-  //TODO - Refactor to not reuse code ========================
   function getFlop() {
-    const deckSize = getDeckSize();
-
-    const cardIDs = randomNumbers(deckSize, 3);
-
-    const flop = cardIDs.map((id) => {
+    const flop = randomCards(deck, 3).map((card) => {
       return {
-        ...deck[id],
+        ...card,
         isDealt: true,
       };
     });
@@ -42,13 +23,9 @@ const Board = () => {
   }
 
   function getTurn() {
-    const deckSize = getDeckSize();
-
-    const cardIDs = randomNumbers(deckSize, 1);
-
-    const turn = cardIDs.map((id) => {
+    const turn = randomCards(deck, 1).map((card) => {
       return {
-        ...deck[id],
+        ...card,
         isDealt: true,
       };
     });
@@ -59,13 +36,9 @@ const Board = () => {
   }
 
   function getRiver() {
-    const deckSize = getDeckSize();
-
-    const cardIDs = randomNumbers(deckSize, 1);
-
-    const river = cardIDs.map((id) => {
+    const river = randomCards(deck, 1).map((card) => {
       return {
-        ...deck[id],
+        ...card,
         isDealt: true,
       };
     });
@@ -74,7 +47,6 @@ const Board = () => {
     dispatch(updateDeck(river));
     dispatch(updateStreet("river"));
   }
-  //TODO - End Todo ===========================================
 
   function handleNewStreet() {
     if (street === "") {
