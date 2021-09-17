@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { updateBoard, updateStreet } from "./boardSlice";
-import { updateDeck, resetDeck } from "../deck/deckSlice";
+import { updateDeck } from "../deck/deckSlice";
 import { randomCards } from "../../helper";
 
 const Board = () => {
@@ -63,17 +63,10 @@ const Board = () => {
     }
   }
 
-  function handleNewGame() {
-    dispatch(updateBoard([]));
-    dispatch(resetDeck());
-    dispatch(updateStreet(""));
-  }
-
   return (
     <>
       <h1>Board</h1>
       <button onClick={handleNewStreet}>New Street</button>
-      <button onClick={handleNewGame}>New Game</button>
       <h3>Street: {street}</h3>
     </>
   );

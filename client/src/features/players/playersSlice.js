@@ -16,6 +16,7 @@ export const playersSlice = createSlice({
         hand: [],
         chips: 0,
         fold: false,
+        position: "",
       };
       state.players = [...state.players, state.player];
     },
@@ -32,8 +33,35 @@ export const playersSlice = createSlice({
         }
       });
     },
+    initializePositions: (state, action) => {
+      // Check for heads up (only 2 players). Dealer is small blind.
+      if (state.players.length === 2) {
+        state.players.forEach((player, idx) => {
+          if (idx === action.payload) {
+            state.players[idx].position = "small blind";
+            if (state.player.id === player.id) {
+              state.player.position = "small blind";
+            }
+          } else {
+            state.players[idx].position = "big blind";
+            if (state.player.id === player.id) {
+              state.player.position = "big blind";
+            }
+          }
+        });
+      }
+    },
+    updatePosition: (state, action) => {
+      console.log(action.payload);
+    },
   },
 });
 
-export const { addPlayer, removePlayer, dealHand } = playersSlice.actions;
+export const {
+  addPlayer,
+  removePlayer,
+  dealHand,
+  initializePositions,
+  updatePosition,
+} = playersSlice.actions;
 export default playersSlice.reducer;
