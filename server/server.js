@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { Server } = require("socket.io");
 const connectDB = require("./db/connectDB");
+const routes = require("./routes");
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ connectDB();
 // Create express app instance
 const app = express();
 app.use(cors());
+app.use(express.json());
+app.use(routes);
 const server = http.createServer(app);
 
 // Create socket.io connection
