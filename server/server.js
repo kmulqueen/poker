@@ -18,6 +18,10 @@ const PORT = 5000 || process.env.PORT;
 io.on("connection", (socket) => {
   console.log("socket.io: New user connected =>", socket.id);
 
+  socket.on("get-players", (data) => {
+    io.emit("get-players", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("socket.io: User disconnected =>", socket.id);
   });

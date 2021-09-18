@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuid, v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 export const playersSlice = createSlice({
   name: "players",
@@ -9,9 +9,11 @@ export const playersSlice = createSlice({
   },
   reducers: {
     addPlayer: (state, action) => {
+      const { clientID, name, socket } = action.payload;
       state.player = {
-        id: v4(),
-        name: action.payload,
+        id: uuid(),
+        clientID: clientID,
+        name: name,
         turn: false,
         hand: [],
         chips: 0,
@@ -19,11 +21,15 @@ export const playersSlice = createSlice({
         position: "",
       };
       state.players = [...state.players, state.player];
+      socket.emit("get-players", JSON.stringify(state.players));
     },
     removePlayer: (state, action) => {
       state.players = state.players.filter(
         (player) => player.id !== action.payload.id
       );
+    },
+    updatePlayers: (state, action) => {
+      state.players = action.payload;
     },
     dealHand: (state, action) => {
       state.players.forEach((player, idx) => {
@@ -60,6 +66,7 @@ export const playersSlice = createSlice({
 export const {
   addPlayer,
   removePlayer,
+  updatePlayers,
   dealHand,
   initializePositions,
   updatePosition,

@@ -66,6 +66,13 @@ const Board = () => {
   return (
     <>
       <h1>Board</h1>
+      <ul>
+        {board.map((card) => (
+          <li key={card.id}>
+            {card.value} of {card.suit}
+          </li>
+        ))}
+      </ul>
       <button onClick={handleNewStreet}>New Street</button>
       <h3>Street: {street}</h3>
     </>

@@ -2,16 +2,19 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addPlayer } from "./playersSlice";
 
-const CreatePlayerForm = ({ clientID }) => {
+const CreatePlayerForm = ({ clientID, socket }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-
   function handleCreatePlayer() {
     if (name === "") {
       return;
     }
-
-    dispatch(addPlayer(name));
+    const payload = {
+      name,
+      clientID,
+      socket,
+    };
+    dispatch(addPlayer(payload));
   }
 
   return (
