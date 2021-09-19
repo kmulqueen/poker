@@ -6,7 +6,6 @@ const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
   const player = useSelector((state) => state.players.player);
   const dispatch = useDispatch();
-  console.log(socket.id);
 
   useEffect(() => {
     socket.on("get-players", (data) => {
