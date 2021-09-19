@@ -1,10 +1,15 @@
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 const players = require("./data").players;
 const Player = require("../models/PlayerModel");
-const connectDB = require("../db/connectDB");
 
 dotenv.config();
-connectDB();
+
+// Connect to db
+mongoose.connect(process.env.MONGO_URI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
 const importData = async () => {
   try {

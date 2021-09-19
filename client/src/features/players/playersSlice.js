@@ -1,28 +1,49 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuid } from "uuid";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
+
+export const getAllPlayers = createAsyncThunk(
+  "players/getAllPlayers",
+  async () => {
+    const res = await axios.get("/api/players", config);
+    return await res.data;
+  }
+);
+
+export const createPlayer = createAsyncThunk(
+  "players/createPlayer",
+  async (player) => {
+    const { clientID, name, socket } = player;
+
+    const payload = {
+      name,
+      clientID,
+      turn: false,
+      hand: [],
+      chips: 0,
+      fold: false,
+      position: "",
+    };
+
+    const res = await axios.post("/api/players", payload, config);
+    const newPlayer = await res.data;
+    return { newPlayer, socket };
+  }
+);
 
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
     player: {},
     players: [],
+    status: null,
   },
   reducers: {
-    addPlayer: (state, action) => {
-      const { clientID, name, socket } = action.payload;
-      state.player = {
-        id: uuid(),
-        clientID: clientID,
-        name: name,
-        turn: false,
-        hand: [],
-        chips: 0,
-        fold: false,
-        position: "",
-      };
-      state.players = [...state.players, state.player];
-      socket.emit("get-players", JSON.stringify(state.players));
-    },
     removePlayer: (state, action) => {
       state.players = state.players.filter(
         (player) => player.id !== action.payload.id
@@ -61,10 +82,32 @@ export const playersSlice = createSlice({
       console.log(action.payload);
     },
   },
+  extraReducers: {
+    [getAllPlayers.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [getAllPlayers.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.players = action.payload;
+    },
+    [getAllPlayers.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [createPlayer.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [createPlayer.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload.newPlayer;
+      state.players = [...state.players, action.payload.newPlayer];
+    },
+    [createPlayer.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+  },
 });
 
 export const {
-  addPlayer,
   removePlayer,
   updatePlayers,
   dealHand,

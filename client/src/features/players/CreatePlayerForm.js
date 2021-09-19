@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addPlayer } from "./playersSlice";
+import { createPlayer } from "./playersSlice";
 
 const CreatePlayerForm = ({ clientID, socket }) => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const CreatePlayerForm = ({ clientID, socket }) => {
       clientID,
       socket,
     };
-    dispatch(addPlayer(payload));
+    dispatch(createPlayer(payload));
   }
 
   return (
