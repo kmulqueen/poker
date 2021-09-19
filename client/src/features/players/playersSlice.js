@@ -36,6 +36,14 @@ export const createPlayer = createAsyncThunk(
   }
 );
 
+export const removePlayer = createAsyncThunk(
+  "players/removePlayer",
+  async (id) => {
+    const res = await axios.delete(`/api/players/${id}`, config);
+    return res.data;
+  }
+);
+
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
@@ -104,14 +112,18 @@ export const playersSlice = createSlice({
     [createPlayer.rejected]: (state, action) => {
       state.status = "failed";
     },
+    [removePlayer.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [removePlayer.fulfilled]: (state, action) => {
+      state.status = "success";
+    },
+    [removePlayer.rejected]: (state, action) => {
+      state.status = "failed";
+    },
   },
 });
 
-export const {
-  removePlayer,
-  updatePlayers,
-  dealHand,
-  initializePositions,
-  updatePosition,
-} = playersSlice.actions;
+export const { updatePlayers, dealHand, initializePositions, updatePosition } =
+  playersSlice.actions;
 export default playersSlice.reducer;

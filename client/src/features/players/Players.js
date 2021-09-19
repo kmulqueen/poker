@@ -1,11 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlayers } from "./playersSlice";
+import { getAllPlayers, removePlayer } from "./playersSlice";
 
 const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
   const player = useSelector((state) => state.players.player);
   const dispatch = useDispatch();
+
+  const handleRemovePlayer = (id) => {
+    dispatch(removePlayer(id));
+  };
 
   useEffect(() => {
     socket.on("get-players", (data) => {
@@ -28,13 +32,18 @@ const Players = ({ socket }) => {
             </h4>
             <h5>Hand:</h5>
             {person.clientID === player.clientID ? (
-              <ul>
-                {person.hand.map((card) => (
-                  <li key={card.id}>
-                    {card.value} of {card.suit}
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul>
+                  {person.hand.map((card) => (
+                    <li key={card.id}>
+                      {card.value} of {card.suit}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={() => handleRemovePlayer(player._id)}>
+                  Leave
+                </button>
+              </>
             ) : (
               <ul>
                 {person.hand.map((card, idx) => (

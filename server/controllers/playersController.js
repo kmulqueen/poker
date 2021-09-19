@@ -33,4 +33,14 @@ module.exports = {
     await PlayerModel.deleteMany();
     res.json({ msg: "All players deleted." });
   },
+  deletePlayerByID: async function (req, res) {
+    const playerID = req.params.id;
+
+    try {
+      await PlayerModel.findByIdAndDelete(playerID);
+      res.json({ msg: "Player deleted." });
+    } catch (error) {
+      res.json({ msg: "Error deleting player.", error });
+    }
+  },
 };
