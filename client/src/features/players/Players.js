@@ -4,7 +4,9 @@ import { getAllPlayers } from "./playersSlice";
 
 const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
+  const player = useSelector((state) => state.players.player);
   const dispatch = useDispatch();
+  console.log(socket.id);
 
   useEffect(() => {
     socket.on("get-players", (data) => {
@@ -20,19 +22,27 @@ const Players = ({ socket }) => {
     <>
       <h1>Players</h1>
       <ul>
-        {players.map((player, index) => (
-          <li key={`${player.name}-${index}`}>
+        {players.map((person, index) => (
+          <li key={`${person.name}-${index}`}>
             <h4>
-              {player.name} - {player.clientID}
+              {person.name} - {person.clientID}
             </h4>
             <h5>Hand:</h5>
-            <ul>
-              {player.hand.map((card) => (
-                <li key={card.id}>
-                  {card.value} of {card.suit}
-                </li>
-              ))}
-            </ul>
+            {person.clientID === player.clientID ? (
+              <ul>
+                {person.hand.map((card) => (
+                  <li key={card.id}>
+                    {card.value} of {card.suit}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul>
+                {person.hand.map((card, idx) => (
+                  <li key={`${person.clientID}-${idx}`}>Card {idx + 1}</li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>
