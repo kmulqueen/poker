@@ -43,4 +43,20 @@ module.exports = {
       res.json({ msg: "Error deleting player.", error });
     }
   },
+  dealPlayerHand: async function (req, res) {
+    PlayerModel.findByIdAndUpdate(
+      req.params.id,
+      { hand: req.body },
+      {
+        new: true,
+      },
+      (err, doc) => {
+        if (err) {
+          res.json({ msg: "Error updating player hand.", err });
+        } else {
+          res.json({ msg: "Player hand dealt.", player: doc });
+        }
+      }
+    );
+  },
 };

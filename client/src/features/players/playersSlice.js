@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const config = {
@@ -44,6 +44,25 @@ export const removePlayer = createAsyncThunk(
   }
 );
 
+export const dealHand = createAsyncThunk(
+  "players/dealHand",
+  async ({ players, hands, playerID }) => {
+    let currPlayer;
+    for (let i = 0; i < players.length; i++) {
+      const res = await axios.post(
+        `/api/players/${players[i]._id}/hand`,
+        hands[players[i]._id],
+        config
+      );
+      const p = await res.data.player;
+      if (p._id === playerID) {
+        currPlayer = p;
+      }
+    }
+    return currPlayer;
+  }
+);
+
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
@@ -52,22 +71,6 @@ export const playersSlice = createSlice({
     status: null,
   },
   reducers: {
-    removePlayer: (state, action) => {
-      state.players = state.players.filter(
-        (player) => player.id !== action.payload.id
-      );
-    },
-    updatePlayers: (state, action) => {
-      state.players = action.payload;
-    },
-    dealHand: (state, action) => {
-      state.players.forEach((player, idx) => {
-        state.players[idx].hand = action.payload[player.id];
-        if (player.id === state.player.id) {
-          state.player.hand = action.payload[player.id];
-        }
-      });
-    },
     initializePositions: (state, action) => {
       // Check for heads up (only 2 players). Dealer is small blind.
       if (state.players.length === 2) {
@@ -85,9 +88,6 @@ export const playersSlice = createSlice({
           }
         });
       }
-    },
-    updatePosition: (state, action) => {
-      console.log(action.payload);
     },
   },
   extraReducers: {
@@ -121,9 +121,18 @@ export const playersSlice = createSlice({
     [removePlayer.rejected]: (state, action) => {
       state.status = "failed";
     },
+    [dealHand.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [dealHand.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload;
+    },
+    [dealHand.rejected]: (state, action) => {
+      state.status = "failed";
+    },
   },
 });
 
-export const { updatePlayers, dealHand, initializePositions, updatePosition } =
-  playersSlice.actions;
+export const { initializePositions } = playersSlice.actions;
 export default playersSlice.reducer;

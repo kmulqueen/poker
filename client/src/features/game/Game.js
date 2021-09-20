@@ -1,15 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
-import {
-  dealHand,
-  initializePositions,
-  updatePosition,
-} from "../players/playersSlice";
+import { dealHand, initializePositions } from "../players/playersSlice";
 import { updateDeck, resetDeck } from "../deck/deckSlice";
 import { updateBoard, updateStreet } from "../board/boardSlice";
 import { randomCards, randomNumbers } from "../../helper";
 
 const Game = () => {
   const players = useSelector((state) => state.players.players);
+  const currentPlayer = useSelector((state) => state.players.player);
   const deck = useSelector((state) => state.deck.deck);
   const dispatch = useDispatch();
 
@@ -34,7 +31,7 @@ const Game = () => {
 
     // Initialize payload as object where keys are player ids and value is array of 2 empty elements
     const playerHands = players.reduce((acc, item) => {
-      acc[item.id] = Array(2);
+      acc[item._id] = Array(2);
       return acc;
     }, {});
 
@@ -54,7 +51,9 @@ const Game = () => {
     });
 
     dispatch(updateDeck(cards));
-    dispatch(dealHand(playerHands));
+    dispatch(
+      dealHand({ players, hands: playerHands, playerID: currentPlayer._id })
+    );
   }
 
   return (
