@@ -59,4 +59,18 @@ module.exports = {
       }
     );
   },
+  updatePlayerPosition: async function (req, res) {
+    PlayerModel.findByIdAndUpdate(
+      req.params.id,
+      { position: req.body.position },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          res.json({ msg: "Error updating player position.", err });
+        } else {
+          res.json({ msg: "Player position updated.", player: doc });
+        }
+      }
+    );
+  },
 };

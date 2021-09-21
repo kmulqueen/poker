@@ -30,6 +30,7 @@ const Players = ({ socket }) => {
             <h4>
               {person.name} - {person.clientID}
             </h4>
+            <h5>Position: {person.position}</h5>
             <h5>Hand:</h5>
             {person.clientID === player.clientID ? (
               <>

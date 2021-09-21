@@ -17,7 +17,9 @@ const Game = () => {
     dispatch(updateBoard([]));
     dispatch(resetDeck());
     dispatch(updateStreet(""));
-    dispatch(initializePositions(dealerIndex));
+    dispatch(
+      initializePositions({ players, playerID: currentPlayer._id, dealerIndex })
+    );
   }
 
   function dealHands() {

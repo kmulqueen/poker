@@ -7,7 +7,7 @@ const playerSchema = new mongoose.Schema({
   hand: { type: [Object] },
   chips: { type: Number },
   fold: { type: Boolean },
-  postion: { type: String },
+  position: { type: String },
 });
 
 const PlayerModel = mongoose.model("Player", playerSchema);

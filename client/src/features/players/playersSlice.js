@@ -63,32 +63,45 @@ export const dealHand = createAsyncThunk(
   }
 );
 
+export const initializePositions = createAsyncThunk(
+  "players/initializePositions",
+  async ({ players, playerID, dealerIndex }) => {
+    let currPlayer = {};
+    // Check for heads up (only 2 players)
+    if (players.length === 2) {
+      for (let i = 0; i < players.length; i++) {
+        let position = { position: "" };
+        if (i === dealerIndex) {
+          position.position = "small blind";
+        } else {
+          position.position = "big blind";
+        }
+        const res = await axios.post(
+          `/api/players/${players[i]._id}/position`,
+          position,
+          config
+        );
+
+        const p = await res.data.player;
+        if (p._id === playerID) {
+          currPlayer = p;
+        }
+      }
+    } else {
+      // NOT heads up
+      console.log("Add logic for more than 2 players...");
+    }
+
+    return currPlayer;
+  }
+);
+
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
     player: {},
     players: [],
     status: null,
-  },
-  reducers: {
-    initializePositions: (state, action) => {
-      // Check for heads up (only 2 players). Dealer is small blind.
-      if (state.players.length === 2) {
-        state.players.forEach((player, idx) => {
-          if (idx === action.payload) {
-            state.players[idx].position = "small blind";
-            if (state.player.id === player.id) {
-              state.player.position = "small blind";
-            }
-          } else {
-            state.players[idx].position = "big blind";
-            if (state.player.id === player.id) {
-              state.player.position = "big blind";
-            }
-          }
-        });
-      }
-    },
   },
   extraReducers: {
     [getAllPlayers.pending]: (state, action) => {
@@ -131,8 +144,17 @@ export const playersSlice = createSlice({
     [dealHand.rejected]: (state, action) => {
       state.status = "failed";
     },
+    [initializePositions.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [initializePositions.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload;
+    },
+    [initializePositions.rejected]: (state, action) => {
+      state.status = "failed";
+    },
   },
 });
 
-export const { initializePositions } = playersSlice.actions;
 export default playersSlice.reducer;
