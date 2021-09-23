@@ -33,7 +33,6 @@ module.exports = {
         if (err) {
           res.json({ msg: "Error updating deck.", err });
         } else {
-          console.log(doc);
           res.json({ msg: "Deck updated.", deck: doc });
         }
       }
