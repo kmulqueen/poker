@@ -1,7 +1,9 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const players = require("./data").players;
+const { deck, players } = require("./data");
 const Player = require("../models/PlayerModel");
+const Deck = require("../models/DeckModel");
+const DeckModel = require("../models/DeckModel");
 
 dotenv.config();
 
@@ -15,9 +17,12 @@ const importData = async () => {
   try {
     // Clear collections of any pre-existing data
     await Player.deleteMany();
+    await Deck.deleteMany();
 
     // Populate DB with test players
     await Player.insertMany(players);
+    const newDeck = new DeckModel({ deck });
+    await newDeck.save();
 
     console.log("Seed data imported.");
     process.exit();
@@ -31,6 +36,7 @@ const deleteData = async () => {
   try {
     // Clear collections of any pre-existing data
     await Player.deleteMany();
+    await Deck.deleteMany();
 
     console.log("Seed data deleted.");
     process.exit();
