@@ -1,0 +1,314 @@
+{
+  "1": {
+    "suit": "hearts",
+    "value": 2,
+    "id": 1,
+    "isDealt": false
+  },
+  "2": {
+    "suit": "hearts",
+    "value": 3,
+    "id": 2,
+    "isDealt": false
+  },
+  "3": {
+    "suit": "hearts",
+    "value": 4,
+    "id": 3,
+    "isDealt": false
+  },
+  "4": {
+    "suit": "hearts",
+    "value": 5,
+    "id": 4,
+    "isDealt": false
+  },
+  "5": {
+    "suit": "hearts",
+    "value": 6,
+    "id": 5,
+    "isDealt": false
+  },
+  "6": {
+    "suit": "hearts",
+    "value": 7,
+    "id": 6,
+    "isDealt": false
+  },
+  "7": {
+    "suit": "hearts",
+    "value": 8,
+    "id": 7,
+    "isDealt": false
+  },
+  "8": {
+    "suit": "hearts",
+    "value": 9,
+    "id": 8,
+    "isDealt": false
+  },
+  "9": {
+    "suit": "hearts",
+    "value": 10,
+    "id": 9,
+    "isDealt": false
+  },
+  "10": {
+    "suit": "hearts",
+    "value": "J",
+    "id": 10,
+    "isDealt": false
+  },
+  "11": {
+    "suit": "hearts",
+    "value": "Q",
+    "id": 11,
+    "isDealt": false
+  },
+  "12": {
+    "suit": "hearts",
+    "value": "K",
+    "id": 12,
+    "isDealt": false
+  },
+  "13": {
+    "suit": "hearts",
+    "value": "A",
+    "id": 13,
+    "isDealt": false
+  },
+  "14": {
+    "suit": "diamonds",
+    "value": 2,
+    "id": 14,
+    "isDealt": false
+  },
+  "15": {
+    "suit": "diamonds",
+    "value": 3,
+    "id": 15,
+    "isDealt": false
+  },
+  "16": {
+    "suit": "diamonds",
+    "value": 4,
+    "id": 16,
+    "isDealt": false
+  },
+  "17": {
+    "suit": "diamonds",
+    "value": 5,
+    "id": 17,
+    "isDealt": false
+  },
+  "18": {
+    "suit": "diamonds",
+    "value": 6,
+    "id": 18,
+    "isDealt": false
+  },
+  "19": {
+    "suit": "diamonds",
+    "value": 7,
+    "id": 19,
+    "isDealt": false
+  },
+  "20": {
+    "suit": "diamonds",
+    "value": 8,
+    "id": 20,
+    "isDealt": false
+  },
+  "21": {
+    "suit": "diamonds",
+    "value": 9,
+    "id": 21,
+    "isDealt": false
+  },
+  "22": {
+    "suit": "diamonds",
+    "value": 10,
+    "id": 22,
+    "isDealt": false
+  },
+  "23": {
+    "suit": "diamonds",
+    "value": "J",
+    "id": 23,
+    "isDealt": false
+  },
+  "24": {
+    "suit": "diamonds",
+    "value": "Q",
+    "id": 24,
+    "isDealt": false
+  },
+  "25": {
+    "suit": "diamonds",
+    "value": "K",
+    "id": 25,
+    "isDealt": false
+  },
+  "26": {
+    "suit": "diamonds",
+    "value": "A",
+    "id": 26,
+    "isDealt": false
+  },
+  "27": {
+    "suit": "clubs",
+    "value": 2,
+    "id": 27,
+    "isDealt": false
+  },
+  "28": {
+    "suit": "clubs",
+    "value": 3,
+    "id": 28,
+    "isDealt": false
+  },
+  "29": {
+    "suit": "clubs",
+    "value": 4,
+    "id": 29,
+    "isDealt": false
+  },
+  "30": {
+    "suit": "clubs",
+    "value": 5,
+    "id": 30,
+    "isDealt": false
+  },
+  "31": {
+    "suit": "clubs",
+    "value": 6,
+    "id": 31,
+    "isDealt": false
+  },
+  "32": {
+    "suit": "clubs",
+    "value": 7,
+    "id": 32,
+    "isDealt": false
+  },
+  "33": {
+    "suit": "clubs",
+    "value": 8,
+    "id": 33,
+    "isDealt": false
+  },
+  "34": {
+    "suit": "clubs",
+    "value": 9,
+    "id": 34,
+    "isDealt": false
+  },
+  "35": {
+    "suit": "clubs",
+    "value": 10,
+    "id": 35,
+    "isDealt": false
+  },
+  "36": {
+    "suit": "clubs",
+    "value": "J",
+    "id": 36,
+    "isDealt": false
+  },
+  "37": {
+    "suit": "clubs",
+    "value": "Q",
+    "id": 37,
+    "isDealt": false
+  },
+  "38": {
+    "suit": "clubs",
+    "value": "K",
+    "id": 38,
+    "isDealt": false
+  },
+  "39": {
+    "suit": "clubs",
+    "value": "A",
+    "id": 39,
+    "isDealt": false
+  },
+  "40": {
+    "suit": "spades",
+    "value": 2,
+    "id": 40,
+    "isDealt": false
+  },
+  "41": {
+    "suit": "spades",
+    "value": 3,
+    "id": 41,
+    "isDealt": false
+  },
+  "42": {
+    "suit": "spades",
+    "value": 4,
+    "id": 42,
+    "isDealt": false
+  },
+  "43": {
+    "suit": "spades",
+    "value": 5,
+    "id": 43,
+    "isDealt": false
+  },
+  "44": {
+    "suit": "spades",
+    "value": 6,
+    "id": 44,
+    "isDealt": false
+  },
+  "45": {
+    "suit": "spades",
+    "value": 7,
+    "id": 45,
+    "isDealt": false
+  },
+  "46": {
+    "suit": "spades",
+    "value": 8,
+    "id": 46,
+    "isDealt": false
+  },
+  "47": {
+    "suit": "spades",
+    "value": 9,
+    "id": 47,
+    "isDealt": false
+  },
+  "48": {
+    "suit": "spades",
+    "value": 10,
+    "id": 48,
+    "isDealt": false
+  },
+  "49": {
+    "suit": "spades",
+    "value": "J",
+    "id": 49,
+    "isDealt": false
+  },
+  "50": {
+    "suit": "spades",
+    "value": "Q",
+    "id": 50,
+    "isDealt": false
+  },
+  "51": {
+    "suit": "spades",
+    "value": "K",
+    "id": 51,
+    "isDealt": false
+  },
+  "52": {
+    "suit": "spades",
+    "value": "A",
+    "id": 52,
+    "isDealt": false
+  }
+}
