@@ -46,9 +46,16 @@ connection.once("open", () => {
   console.log("MongoDB: Setting up change streams...");
 
   const playerChangeStreams = connection.collection("players").watch();
+  const deckChangeStreams = connection
+    .collection("decks")
+    .watch([], { fullDocument: "updateLookup" });
 
   playerChangeStreams.on("change", (change) => {
     io.emit("get-players", JSON.stringify(change.fullDocument));
+  });
+
+  deckChangeStreams.on("change", (change) => {
+    io.emit("get-deck", JSON.stringify(change.fullDocument));
   });
 });
 

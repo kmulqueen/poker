@@ -16,8 +16,6 @@ export const randomCards = (deck, numOfCards) => {
     let cardID = Math.floor(Math.random() * 52);
     if (cardID !== 0) {
       if (deck.hasOwnProperty("deck")) {
-        console.log("has deck property");
-        console.log("card id", cardID);
         if (!deck.deck[cardID].isDealt) {
           cardIDs.add(cardID);
         }

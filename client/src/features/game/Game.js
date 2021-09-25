@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { dealHand, initializePositions } from "../players/playersSlice";
 import { createDeck, getDeck, updateDeck } from "../deck/deckSlice";
@@ -5,12 +6,11 @@ import { updateBoard, updateStreet } from "../board/boardSlice";
 import { randomCards, randomNumbers } from "../../helper";
 import newDeck from "../../deck.json";
 
-const Game = () => {
+const Game = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
   const currentPlayer = useSelector((state) => state.players.player);
   const deck = useSelector((state) => state.deck.deck.deck);
   const deckID = useSelector((state) => state.deck.deck._id);
-  const test = useSelector((state) => state.deck);
   const dispatch = useDispatch();
 
   function handleNewGame() {
@@ -28,7 +28,6 @@ const Game = () => {
   function dealHands() {
     // Get total number of cards to deal & mark them as dealt
     const cards = randomCards(deck, players.length * 2).map((card) => {
-      console.log("deck from deal", deck);
       return {
         ...card,
         isDealt: true,
@@ -79,6 +78,13 @@ const Game = () => {
       dealHand({ players, hands: playerHands, playerID: currentPlayer._id })
     );
   }
+
+  useEffect(() => {
+    socket.on("get-deck", async (data) => {
+      const parsed = await JSON.parse(data);
+      dispatch(getDeck(parsed._id));
+    });
+  }, [socket, dispatch]);
 
   return (
     <>
