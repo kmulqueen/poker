@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const config = {
@@ -88,8 +88,44 @@ export const initializePositions = createAsyncThunk(
         }
       }
     } else {
-      // NOT heads up
-      console.log("Add logic for more than 2 players...");
+      let smallBlindIndex, bigBlindIndex, res, p;
+
+      // Check if last player in list is dealer button
+      if (players[dealerIndex + 1] === undefined) {
+        smallBlindIndex = 0;
+        bigBlindIndex = 1;
+      }
+      // Check if second to last player in list is dealer button
+      else if (dealerIndex === players.length - 2) {
+        smallBlindIndex = players.length - 1;
+        bigBlindIndex = 0;
+      } else {
+        smallBlindIndex = dealerIndex + 1;
+        bigBlindIndex = dealerIndex + 2;
+      }
+
+      for (let i = 0; i < players.length; i++) {
+        let position = { position: "" };
+
+        if (i === dealerIndex) {
+          position.position = "dealer";
+        } else if (i === smallBlindIndex) {
+          position.position = "small blind";
+        } else if (i === bigBlindIndex) {
+          position.position = "big blind";
+        }
+
+        res = await axios.post(
+          `/api/players/${players[i]._id}/position`,
+          position,
+          config
+        );
+
+        p = await res.data.player;
+        if (p._id === playerID) {
+          currPlayer = p;
+        }
+      }
     }
 
     return currPlayer;

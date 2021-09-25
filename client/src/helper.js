@@ -10,21 +10,32 @@ export const randomNumbers = (limit, numOfNumbers) => {
 
 // randomCards returns an array with a determined number of random cards which have not been dealt.
 export const randomCards = (deck, numOfCards) => {
-  const deckSize = Object.keys(deck).length;
   const cardIDs = new Set();
 
   while (cardIDs.size < numOfCards) {
-    let cardID = Math.floor(Math.random() * deckSize);
+    let cardID = Math.floor(Math.random() * 52);
     if (cardID !== 0) {
-      if (!deck[cardID].isDealt) {
-        cardIDs.add(cardID);
+      if (deck.hasOwnProperty("deck")) {
+        console.log("has deck property");
+        console.log("card id", cardID);
+        if (!deck.deck[cardID].isDealt) {
+          cardIDs.add(cardID);
+        }
+      } else {
+        if (!deck[cardID].isDealt) {
+          cardIDs.add(cardID);
+        }
       }
     }
   }
 
   const cards = [];
   cardIDs.forEach((value) => {
-    cards.push(deck[value]);
+    if (deck.hasOwnProperty("deck")) {
+      cards.push(deck.deck[value]);
+    } else {
+      cards.push(deck[value]);
+    }
   });
 
   return cards;

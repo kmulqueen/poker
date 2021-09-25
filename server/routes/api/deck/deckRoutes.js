@@ -1,10 +1,16 @@
 const router = require("express").Router();
 const deckController = require("../../../controllers/deckController");
 
-router.route("/reset").get(deckController.resetDeck);
 router
   .route("/:id")
   .get(deckController.getDeckByID)
-  .post(deckController.updateDeck);
+  .post(deckController.updateDeck)
+  .delete(deckController.deleteDeckByID);
+
+router
+  .route("/")
+  .get(deckController.getAllDecks)
+  .post(deckController.createNewDeck)
+  .delete(deckController.deleteAllDecks);
 
 module.exports = router;
