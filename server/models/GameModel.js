@@ -6,5 +6,5 @@ const gameSchema = new mongoose.Schema({
   pot: { type: Number },
 });
 
-const GameModel = new mongoose.model("Game", gameSchema);
+const GameModel = mongoose.model("Game", gameSchema);
 module.exports = GameModel;
