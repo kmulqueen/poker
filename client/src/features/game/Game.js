@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { dealHand, initializePositions } from "../players/playersSlice";
 import { createDeck, getDeck, updateDeck } from "../deck/deckSlice";
-import { updateBoard, updateStreet } from "../board/boardSlice";
+import { createGame } from "./gameSlice";
 import { randomCards, randomNumbers } from "../../helper";
 import newDeck from "../../deck.json";
 
@@ -17,9 +17,8 @@ const Game = ({ socket }) => {
     // Initialize positions
     const dealerIndex = randomNumbers(players.length, 1)[0] - 1;
 
-    dispatch(updateBoard([]));
+    dispatch(createGame());
     dispatch(createDeck({ deck: newDeck }));
-    dispatch(updateStreet(""));
     dispatch(
       initializePositions({ players, playerID: currentPlayer._id, dealerIndex })
     );

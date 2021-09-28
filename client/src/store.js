@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import deckReducer from "./features/deck/deckSlice";
-import boardReducer from "./features/board/boardSlice";
+import gameReducer from "./features/game/gameSlice";
 import playersReducer from "./features/players/playersSlice";
 
 export default configureStore({
   reducer: {
-    board: boardReducer,
+    game: gameReducer,
     deck: deckReducer,
     players: playersReducer,
   },

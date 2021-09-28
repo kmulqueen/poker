@@ -6,7 +6,7 @@ module.exports = {
       const newGame = await GameModel.create({
         board: [],
         street: "pre-flop",
-        pot: 150,
+        pot: 0,
       });
       res.json(newGame).status(201);
     } catch (error) {

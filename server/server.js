@@ -49,6 +49,9 @@ connection.once("open", () => {
   const deckChangeStreams = connection
     .collection("decks")
     .watch([], { fullDocument: "updateLookup" });
+  const gameChangeStreams = connection
+    .collection("games")
+    .watch([], { fullDocument: "updateLookup" });
 
   playerChangeStreams.on("change", (change) => {
     io.emit("get-players", JSON.stringify(change.fullDocument));
@@ -56,6 +59,10 @@ connection.once("open", () => {
 
   deckChangeStreams.on("change", (change) => {
     io.emit("get-deck", JSON.stringify(change.fullDocument));
+  });
+
+  gameChangeStreams.on("change", (change) => {
+    io.emit("get-game", JSON.stringify(change.fullDocument));
   });
 });
 
