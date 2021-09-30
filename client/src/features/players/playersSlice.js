@@ -50,11 +50,14 @@ export const dealHand = createAsyncThunk(
     let currPlayer;
     for (let i = 0; i < players.length; i++) {
       const res = await axios.post(
-        `/api/players/${players[i]._id}/hand`,
-        hands[players[i]._id],
+        `/api/players/${players[i]._id}`,
+        {
+          ...players[i],
+          hand: hands[players[i]._id],
+        },
         config
       );
-      const p = await res.data.player;
+      const p = await res.data;
       if (p._id === playerID) {
         currPlayer = p;
       }
@@ -70,19 +73,21 @@ export const initializePositions = createAsyncThunk(
     // Check for heads up (only 2 players)
     if (players.length === 2) {
       for (let i = 0; i < players.length; i++) {
-        let position = { position: "" };
+        let position = "";
         if (i === dealerIndex) {
-          position.position = "small blind";
+          position = "small blind";
         } else {
-          position.position = "big blind";
+          position = "big blind";
         }
         const res = await axios.post(
-          `/api/players/${players[i]._id}/position`,
-          position,
+          `/api/players/${players[i]._id}`,
+          {
+            ...players[i],
+            position,
+          },
           config
         );
-
-        const p = await res.data.player;
+        const p = await res.data;
         if (p._id === playerID) {
           currPlayer = p;
         }
@@ -105,23 +110,26 @@ export const initializePositions = createAsyncThunk(
       }
 
       for (let i = 0; i < players.length; i++) {
-        let position = { position: "" };
+        let position = "";
 
         if (i === dealerIndex) {
-          position.position = "dealer";
+          position = "dealer";
         } else if (i === smallBlindIndex) {
-          position.position = "small blind";
+          position = "small blind";
         } else if (i === bigBlindIndex) {
-          position.position = "big blind";
+          position = "big blind";
         }
 
         res = await axios.post(
-          `/api/players/${players[i]._id}/position`,
-          position,
+          `/api/players/${players[i]._id}`,
+          {
+            ...players[i],
+            position,
+          },
           config
         );
 
-        p = await res.data.player;
+        p = await res.data;
         if (p._id === playerID) {
           currPlayer = p;
         }

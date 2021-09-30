@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const playersController = require("../../../controllers/playersController");
 
-router.route("/:id/hand").post(playersController.dealPlayerHand);
-router.route("/:id/position").post(playersController.updatePlayerPosition);
+router.route("/:id").post(playersController.updatePlayer);
 
 router.route("/:id").delete(playersController.deletePlayerByID);
 
