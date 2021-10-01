@@ -27,10 +27,9 @@ const Players = ({ socket }) => {
       <ul>
         {players.map((person, index) => (
           <li key={`${person.name}-${index}`}>
-            <h4>
-              {person.name} - {person.clientID}
-            </h4>
+            <h4>{person.name}</h4>
             <h5>Position: {person.position}</h5>
+            <h5>Turn: {person.turn ? "True" : "False"}</h5>
             <h5>Hand:</h5>
             {person.clientID === player.clientID ? (
               <>

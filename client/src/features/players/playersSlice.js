@@ -74,8 +74,10 @@ export const initializePositions = createAsyncThunk(
     if (players.length === 2) {
       for (let i = 0; i < players.length; i++) {
         let position = "";
+        let turn = false;
         if (i === dealerIndex) {
           position = "small blind";
+          turn = true;
         } else {
           position = "big blind";
         }
@@ -84,6 +86,7 @@ export const initializePositions = createAsyncThunk(
           {
             ...players[i],
             position,
+            turn,
           },
           config
         );
@@ -94,7 +97,6 @@ export const initializePositions = createAsyncThunk(
       }
     } else {
       let smallBlindIndex, bigBlindIndex, res, p;
-
       // Check if last player in list is dealer button
       if (players[dealerIndex + 1] === undefined) {
         smallBlindIndex = 0;
@@ -111,13 +113,27 @@ export const initializePositions = createAsyncThunk(
 
       for (let i = 0; i < players.length; i++) {
         let position = "";
-
+        let turn = false;
         if (i === dealerIndex) {
           position = "dealer";
+          if (players.length === 3) {
+            turn = true;
+          }
         } else if (i === smallBlindIndex) {
           position = "small blind";
         } else if (i === bigBlindIndex) {
           position = "big blind";
+        }
+
+        if (players.length > 3) {
+          if (
+            players[bigBlindIndex + 1] !== undefined &&
+            bigBlindIndex + 1 === i
+          ) {
+            turn = true;
+          } else if (players[bigBlindIndex + 1] === undefined && i === 0) {
+            turn = true;
+          }
         }
 
         res = await axios.post(
@@ -125,10 +141,10 @@ export const initializePositions = createAsyncThunk(
           {
             ...players[i],
             position,
+            turn,
           },
           config
         );
-
         p = await res.data;
         if (p._id === playerID) {
           currPlayer = p;
