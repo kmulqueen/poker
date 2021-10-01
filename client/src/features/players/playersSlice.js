@@ -156,6 +156,35 @@ export const initializePositions = createAsyncThunk(
   }
 );
 
+export const updatePlayerTurns = createAsyncThunk(
+  "players/updatePlayerTurns",
+  async ({ players, currPlayerID, nextPlayerID }) => {
+    let currPlayer = players.filter((player) => player._id === currPlayerID);
+    let nextPlayer = players.filter((player) => player._id === nextPlayerID);
+
+    const res = await axios.post(
+      `/api/players/${currPlayerID}`,
+      {
+        ...currPlayer,
+        turn: false,
+      },
+      config
+    );
+
+    currPlayer = await res.data;
+
+    await axios.post(
+      `/api/players/${nextPlayerID}`,
+      {
+        ...nextPlayer,
+        turn: true,
+      },
+      config
+    );
+
+    return currPlayer;
+  }
+);
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
@@ -212,6 +241,16 @@ export const playersSlice = createSlice({
       state.player = action.payload;
     },
     [initializePositions.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [updatePlayerTurns.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [updatePlayerTurns.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload;
+    },
+    [updatePlayerTurns.rejected]: (state, action) => {
       state.status = "failed";
     },
   },

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlayers, removePlayer } from "./playersSlice";
+import { getAllPlayers, removePlayer, updatePlayerTurns } from "./playersSlice";
 
 const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
@@ -9,6 +9,17 @@ const Players = ({ socket }) => {
 
   const handleRemovePlayer = (id) => {
     dispatch(removePlayer(id));
+  };
+
+  const handleUpdatePlayerTurns = (id) => {
+    const currPlayerIdx = players.findIndex((element) => element._id === id);
+    let nextPlayerID;
+    if (currPlayerIdx !== players.length - 1) {
+      nextPlayerID = players[currPlayerIdx + 1]._id;
+    } else {
+      nextPlayerID = players[0]._id;
+    }
+    dispatch(updatePlayerTurns({ players, currPlayerID: id, nextPlayerID }));
   };
 
   useEffect(() => {
@@ -51,6 +62,28 @@ const Players = ({ socket }) => {
                 ))}
               </ul>
             )}
+            {person.clientID === player.clientID ? (
+              <>
+                <button
+                  onClick={() => handleUpdatePlayerTurns(player._id)}
+                  disabled={person.turn === false}
+                >
+                  Fold
+                </button>
+                <button
+                  onClick={() => handleUpdatePlayerTurns(player._id)}
+                  disabled={person.turn === false}
+                >
+                  Check
+                </button>
+                <button
+                  onClick={() => handleUpdatePlayerTurns(player._id)}
+                  disabled={person.turn === false}
+                >
+                  Bet
+                </button>
+              </>
+            ) : null}
           </li>
         ))}
       </ul>
