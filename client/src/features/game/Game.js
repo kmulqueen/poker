@@ -1,10 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  dealHand,
-  initializePositions,
-  updatePlayerTurns,
-} from "../players/playersSlice";
+import { dealHand, initializePositions } from "../players/playersSlice";
 import { createDeck, getDeck, updateDeck } from "../deck/deckSlice";
 import { createGame } from "./gameSlice";
 import { randomCards, randomNumbers } from "../../helper";

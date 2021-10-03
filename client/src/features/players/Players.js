@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlayers, removePlayer, updatePlayerTurns } from "./playersSlice";
+import {
+  getAllPlayers,
+  removePlayer,
+  updatePlayerTurns,
+  playerFold,
+} from "./playersSlice";
+import { validPlayersIndexes } from "../../helper";
 
 const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
@@ -11,15 +17,33 @@ const Players = ({ socket }) => {
     dispatch(removePlayer(id));
   };
 
-  const handleUpdatePlayerTurns = (id) => {
-    const currPlayerIdx = players.findIndex((element) => element._id === id);
-    let nextPlayerID;
-    if (currPlayerIdx !== players.length - 1) {
-      nextPlayerID = players[currPlayerIdx + 1]._id;
+  const handleUpdatePlayerTurns = (action) => {
+    let nextPlayer;
+    // Get indexes of players who haven't folded.
+    const validPlayers = validPlayersIndexes(players);
+
+    // Get current player index from players state
+    const currPlayerIdx = players.findIndex((elem) => elem._id === player._id);
+
+    // Get current player index from the list of valid players
+    const currValidPlayerIdx = validPlayers.indexOf(currPlayerIdx);
+
+    // Assign next player to next valid index in players state
+    if (validPlayers[currValidPlayerIdx + 1] !== undefined) {
+      nextPlayer = players[validPlayers[currValidPlayerIdx + 1]];
     } else {
-      nextPlayerID = players[0]._id;
+      nextPlayer = players[validPlayers[0]];
     }
-    dispatch(updatePlayerTurns({ players, currPlayerID: id, nextPlayerID }));
+
+    switch (action) {
+      case "check":
+        dispatch(updatePlayerTurns({ currPlayer: player, nextPlayer }));
+        break;
+      case "fold":
+        dispatch(playerFold({ currPlayer: player, nextPlayer }));
+        break;
+      //TODO - Make "bet" case for switch statement
+    }
   };
 
   useEffect(() => {
@@ -41,6 +65,7 @@ const Players = ({ socket }) => {
             <h4>{person.name}</h4>
             <h5>Position: {person.position}</h5>
             <h5>Turn: {person.turn ? "True" : "False"}</h5>
+            <h5>Folded: {person.fold ? "True" : "False"}</h5>
             <h5>Hand:</h5>
             {person.clientID === player.clientID ? (
               <>
@@ -65,20 +90,20 @@ const Players = ({ socket }) => {
             {person.clientID === player.clientID ? (
               <>
                 <button
-                  onClick={() => handleUpdatePlayerTurns(player._id)}
-                  disabled={person.turn === false}
+                  onClick={() => handleUpdatePlayerTurns("fold")}
+                  disabled={person.turn === false || person.fold === true}
                 >
                   Fold
                 </button>
                 <button
-                  onClick={() => handleUpdatePlayerTurns(player._id)}
-                  disabled={person.turn === false}
+                  onClick={() => handleUpdatePlayerTurns("check")}
+                  disabled={person.turn === false || person.fold === true}
                 >
                   Check
                 </button>
                 <button
-                  onClick={() => handleUpdatePlayerTurns(player._id)}
-                  disabled={person.turn === false}
+                  onClick={() => handleUpdatePlayerTurns("check")} //TODO - Make "bet" case for switch statement
+                  disabled={person.turn === false || person.fold === true}
                 >
                   Bet
                 </button>

@@ -38,3 +38,12 @@ export const randomCards = (deck, numOfCards) => {
 
   return cards;
 };
+
+export const validPlayersIndexes = (players) => {
+  return players.reduce((acc, item, idx) => {
+    if (!item.fold) {
+      acc = [...acc, idx];
+    }
+    return acc;
+  }, []);
+};

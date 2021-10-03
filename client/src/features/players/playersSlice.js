@@ -158,12 +158,9 @@ export const initializePositions = createAsyncThunk(
 
 export const updatePlayerTurns = createAsyncThunk(
   "players/updatePlayerTurns",
-  async ({ players, currPlayerID, nextPlayerID }) => {
-    let currPlayer = players.filter((player) => player._id === currPlayerID);
-    let nextPlayer = players.filter((player) => player._id === nextPlayerID);
-
+  async ({ currPlayer, nextPlayer }) => {
     const res = await axios.post(
-      `/api/players/${currPlayerID}`,
+      `/api/players/${currPlayer._id}`,
       {
         ...currPlayer,
         turn: false,
@@ -171,10 +168,8 @@ export const updatePlayerTurns = createAsyncThunk(
       config
     );
 
-    currPlayer = await res.data;
-
     await axios.post(
-      `/api/players/${nextPlayerID}`,
+      `/api/players/${nextPlayer._id}`,
       {
         ...nextPlayer,
         turn: true,
@@ -182,9 +177,36 @@ export const updatePlayerTurns = createAsyncThunk(
       config
     );
 
-    return currPlayer;
+    return await res.data;
   }
 );
+
+export const playerFold = createAsyncThunk(
+  "players/playerFold",
+  async ({ currPlayer, nextPlayer }) => {
+    const res = await axios.post(
+      `/api/players/${currPlayer._id}`,
+      {
+        ...currPlayer,
+        fold: true,
+        turn: false,
+      },
+      config
+    );
+
+    await axios.post(
+      `/api/players/${nextPlayer._id}`,
+      {
+        ...nextPlayer,
+        turn: true,
+      },
+      config
+    );
+
+    return await res.data;
+  }
+);
+
 export const playersSlice = createSlice({
   name: "players",
   initialState: {
@@ -251,6 +273,16 @@ export const playersSlice = createSlice({
       state.player = action.payload;
     },
     [updatePlayerTurns.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [playerFold.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [playerFold.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload;
+    },
+    [playerFold.rejected]: (state, action) => {
       state.status = "failed";
     },
   },
