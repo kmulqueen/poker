@@ -29,6 +29,29 @@ export const updateBoard = createAsyncThunk(
   }
 );
 
+export const updatePot = createAsyncThunk(
+  "game/updatePot",
+  async ({ gameID, chips }) => {
+    const game = await axios.get(`/api/game/${gameID}`, config);
+    const currPot = await game.data.pot;
+    const res = await axios.post(
+      `/api/game/${gameID}`,
+      { pot: currPot + chips },
+      config
+    );
+
+    return await res.data;
+  }
+);
+
+export const updateBet = createAsyncThunk(
+  "game/updateBet",
+  async ({ gameID, bet }) => {
+    const res = await axios.post(`/api/game/${gameID}`, { bet }, config);
+    return await res.data;
+  }
+);
+
 export const gameSlice = createSlice({
   name: "game",
   initialState: {
@@ -36,6 +59,7 @@ export const gameSlice = createSlice({
       board: [],
       street: "",
       pot: 0,
+      bet: 0,
     },
     status: null,
   },
@@ -68,6 +92,26 @@ export const gameSlice = createSlice({
       state.status = "success";
     },
     [getBoard.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [updatePot.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [updatePot.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.game = action.payload;
+    },
+    [updatePot.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [updateBet.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [updateBet.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.game = action.payload;
+    },
+    [updateBet.rejected]: (state, action) => {
       state.status = "failed";
     },
   },

@@ -75,11 +75,16 @@ export const initializePositions = createAsyncThunk(
       for (let i = 0; i < players.length; i++) {
         let position = "";
         let turn = false;
+        let chips, bet;
         if (i === dealerIndex) {
           position = "small blind";
           turn = true;
+          chips = 9950;
+          bet = 50;
         } else {
           position = "big blind";
+          chips = 9900;
+          bet = 100;
         }
         const res = await axios.post(
           `/api/players/${players[i]._id}`,
@@ -87,6 +92,8 @@ export const initializePositions = createAsyncThunk(
             ...players[i],
             position,
             turn,
+            chips,
+            bet,
           },
           config
         );
@@ -114,15 +121,22 @@ export const initializePositions = createAsyncThunk(
       for (let i = 0; i < players.length; i++) {
         let position = "";
         let turn = false;
+        let chips = 10000;
+        let bet;
         if (i === dealerIndex) {
           position = "dealer";
           if (players.length === 3) {
             turn = true;
+            bet = 0;
           }
         } else if (i === smallBlindIndex) {
           position = "small blind";
+          chips = 9950;
+          bet = 50;
         } else if (i === bigBlindIndex) {
           position = "big blind";
+          chips = 9900;
+          bet = 100;
         }
 
         if (players.length > 3) {
@@ -142,6 +156,8 @@ export const initializePositions = createAsyncThunk(
             ...players[i],
             position,
             turn,
+            chips,
+            bet,
           },
           config
         );
@@ -203,6 +219,31 @@ export const playerFold = createAsyncThunk(
       config
     );
 
+    return await res.data;
+  }
+);
+
+export const updatePlayerChips = createAsyncThunk(
+  "players/updatePlayerChips",
+  async ({ currPlayer, chips }) => {
+    const updatedChips = currPlayer.chips - chips;
+    const res = await axios.post(
+      `/api/players/${currPlayer._id}`,
+      { chips: updatedChips },
+      config
+    );
+    return await res.data;
+  }
+);
+
+export const updatePlayerBet = createAsyncThunk(
+  "players/updatePlayerBet",
+  async ({ currPlayer, bet }) => {
+    const res = await axios.post(
+      `/api/players/${currPlayer._id}`,
+      { bet },
+      config
+    );
     return await res.data;
   }
 );
@@ -283,6 +324,16 @@ export const playersSlice = createSlice({
       state.player = action.payload;
     },
     [playerFold.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [updatePlayerChips.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [updatePlayerChips.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.player = action.payload;
+    },
+    [updatePlayerChips.rejected]: (state, action) => {
       state.status = "failed";
     },
   },

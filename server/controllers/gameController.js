@@ -6,7 +6,8 @@ module.exports = {
       const newGame = await GameModel.create({
         board: [],
         street: "pre-flop",
-        pot: 0,
+        pot: 150,
+        bet: 100,
       });
       res.json(newGame).status(201);
     } catch (error) {
@@ -38,10 +39,9 @@ module.exports = {
     }
   },
   updateGameByID: async (req, res) => {
-    const { board, street, pot } = req.body;
     GameModel.findByIdAndUpdate(
       req.params.id,
-      { board, street, pot },
+      req.body,
       { new: true },
       (err, doc) => {
         if (err) {

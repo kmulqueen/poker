@@ -5,7 +5,7 @@ import { getBoard, updateBoard } from "../game/gameSlice";
 import { randomCards } from "../../helper";
 
 const Board = ({ socket }) => {
-  const { board, street, pot } = useSelector((state) => state.game.game);
+  const { board, street, pot, bet } = useSelector((state) => state.game.game);
   const gameID = useSelector((state) => state.game.game._id);
   const deck = useSelector((state) => state.deck.deck.deck);
   const deckID = useSelector((state) => state.deck.deck._id);
@@ -142,6 +142,8 @@ const Board = ({ socket }) => {
       )}
       <button onClick={() => handleNewStreet()}>New Street</button>
       <h3>Street: {street}</h3>
+      <h3>Pot: {pot}</h3>
+      <h3>Bet to call: {bet}</h3>
     </>
   );
 };

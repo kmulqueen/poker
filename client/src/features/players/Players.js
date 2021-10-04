@@ -1,17 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getAllPlayers,
   removePlayer,
   updatePlayerTurns,
   playerFold,
+  updatePlayerChips,
+  updatePlayerBet,
 } from "./playersSlice";
+import { updatePot, updateBet } from "../game/gameSlice";
 import { validPlayersIndexes } from "../../helper";
 
 const Players = ({ socket }) => {
   const players = useSelector((state) => state.players.players);
   const player = useSelector((state) => state.players.player);
+  const { _id: gameID, bet: gameBet } = useSelector((state) => state.game.game);
+
   const dispatch = useDispatch();
+
+  const [betAmount, setBetAmount] = useState(100);
 
   const handleRemovePlayer = (id) => {
     dispatch(removePlayer(id));
@@ -42,7 +49,16 @@ const Players = ({ socket }) => {
       case "fold":
         dispatch(playerFold({ currPlayer: player, nextPlayer }));
         break;
-      //TODO - Make "bet" case for switch statement
+      case "bet":
+        dispatch(updatePot({ gameID, chips: betAmount }));
+        dispatch(updatePlayerChips({ currPlayer: player, chips: betAmount }));
+        dispatch(updatePlayerBet({ currPlayer: player, bet: betAmount }));
+        if (betAmount > gameBet) {
+          dispatch(updateBet({ gameID, bet: betAmount }));
+        }
+        dispatch(updatePlayerTurns({ currPlayer: player, nextPlayer }));
+        break;
+      //TODO - Make case for "call"
     }
   };
 
@@ -66,6 +82,7 @@ const Players = ({ socket }) => {
             <h5>Position: {person.position}</h5>
             <h5>Turn: {person.turn ? "True" : "False"}</h5>
             <h5>Folded: {person.fold ? "True" : "False"}</h5>
+            <h5>Bet: {person.bet}</h5>
             <h5>Hand:</h5>
             {person.clientID === player.clientID ? (
               <>
@@ -87,6 +104,7 @@ const Players = ({ socket }) => {
                 ))}
               </ul>
             )}
+            <h5>Chips: {person.chips}</h5>
             {person.clientID === player.clientID ? (
               <>
                 <button
@@ -95,18 +113,38 @@ const Players = ({ socket }) => {
                 >
                   Fold
                 </button>
+                {person.bet === gameBet && (
+                  <button
+                    onClick={() => handleUpdatePlayerTurns("check")}
+                    disabled={person.turn === false || person.fold === true}
+                  >
+                    Check
+                  </button>
+                )}
+                {person.bet < gameBet && (
+                  <button
+                    onClick={() => handleUpdatePlayerTurns("check")} //TODO - Make case for "call"
+                    disabled={person.turn === false || person.fold === true}
+                  >
+                    Call
+                  </button>
+                )}
                 <button
-                  onClick={() => handleUpdatePlayerTurns("check")}
-                  disabled={person.turn === false || person.fold === true}
-                >
-                  Check
-                </button>
-                <button
-                  onClick={() => handleUpdatePlayerTurns("check")} //TODO - Make "bet" case for switch statement
+                  onClick={() => handleUpdatePlayerTurns("bet")}
                   disabled={person.turn === false || person.fold === true}
                 >
                   Bet
                 </button>
+                <label htmlFor="input-bet">Bet: {betAmount}</label>
+                <input
+                  name="input-bet"
+                  type="range"
+                  min={100}
+                  max={person.chips}
+                  step={25}
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(parseInt(e.target.value))}
+                />
               </>
             ) : null}
           </li>

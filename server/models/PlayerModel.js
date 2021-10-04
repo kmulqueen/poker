@@ -6,6 +6,7 @@ const playerSchema = new mongoose.Schema({
   turn: { type: Boolean },
   hand: { type: [Object] },
   chips: { type: Number },
+  bet: { type: Number },
   fold: { type: Boolean },
   position: { type: String },
 });
